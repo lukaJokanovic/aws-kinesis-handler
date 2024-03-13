@@ -19,6 +19,8 @@
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^2.0.2",
+    "@aws-sdk/client-kinesis": "^3.529.1",
+    "@aws-sdk/node-http-handler": "^3.374.0",
     "joi": "^17.10.2"
   },
   "devDependencies": {

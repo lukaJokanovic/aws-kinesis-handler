@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  kinesalite:
+    build:
+      context: .
+      dockerfile: Dockerfile.kinesalite
+    ports:
+      - "4567:4567"
+    environment:
+      - AWS_ACCESS_KEY_ID=some_id
+      - AWS_SECRET_ACCESS_KEY=some_key
+      - AWS_REGION=eu-west-2
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - kinesalite
+    extra_hosts:
+     - "host.docker.internal:host-gateway"
+    command: >
+      sh -c "node ./build/services/external/Kinesis.service.js"
