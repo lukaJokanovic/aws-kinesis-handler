@@ -1,0 +1,10 @@
+export enum LimitPeriod {
+    CALENDAR_DAY = 'CALENDAR_DAY',
+    CALENDAR_WEEK = 'CALENDAR_WEEK',
+    CALENDAR_MONTH = 'CALENDAR_MONTH',
+    DAY = 'DAY',
+    INDEFINITE = 'INDEFINITE',
+    INSTANCE = 'INSTANCE',
+    WEEK = 'WEEK',
+    MONTH = 'MONTH',
+  }
