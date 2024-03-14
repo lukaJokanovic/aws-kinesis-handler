@@ -1,12 +1,10 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { IUserLimit } from '../../handlers/user-events/types/IUserLimit';
-import { INSUFFICIENT_FUNDS, USER_LIMIT_DOES_NOT_EXIST } from '../../constants/errors';
 import { UserLimitInMemoryRepository } from '../../repositories/user-limit/UserLimitInMemory.repository';
 
 // Use chai-as-promised plugin
 chai.use(chaiAsPromised);
-
 
 describe('UserLimitInMemoryRepository', () => {
   let repository: UserLimitInMemoryRepository;
@@ -22,7 +20,7 @@ describe('UserLimitInMemoryRepository', () => {
     });
 
     it('should return stored value for existing key', async () => {
-      const userLimit = { userLimitId: '123', value: '100', progress: '50', nextResetTime: 0 }  as IUserLimit;
+      const userLimit = { userLimitId: '123', value: '100', progress: '50', nextResetTime: 0 } as IUserLimit;
       repository.save(userLimit);
 
       const result = await repository.get('123');
@@ -32,7 +30,7 @@ describe('UserLimitInMemoryRepository', () => {
 
   describe('save', () => {
     it('should store user limit in the repository', async () => {
-      const userLimit = { userLimitId: '123', value: '100', progress: '50', nextResetTime: 0 }  as IUserLimit;
+      const userLimit = { userLimitId: '123', value: '100', progress: '50', nextResetTime: 0 } as IUserLimit;
       await repository.save(userLimit);
 
       const result = await repository.get('123');
@@ -47,7 +45,7 @@ describe('UserLimitInMemoryRepository', () => {
     });
 
     it('should throw error if amount exceeds user limit', async () => {
-      const userLimit = { userLimitId:'123', value: '100', progress: '50', nextResetTime: 0 }  as IUserLimit;
+      const userLimit = { userLimitId: '123', value: '100', progress: '50', nextResetTime: 0 } as IUserLimit;
       repository.save(userLimit);
 
       await expect(repository.update('123', '200')).to.be.rejected;

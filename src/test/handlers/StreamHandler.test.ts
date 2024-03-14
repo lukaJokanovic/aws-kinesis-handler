@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import Joi from 'joi';
-import { IKinesisService, KinesisService } from '../../services/external/Kinesis.service';
+import { KinesisService } from '../../services/external/Kinesis.service';
 import { StreamHandler } from '../../handlers/StreamHandler';
 import logger from '../../services/external/Logger.service';
 
@@ -10,14 +10,14 @@ describe('StreamHandler', () => {
   let sandbox: sinon.SinonSandbox;
   let subscribeStub: sinon.SinonStub;
 
-  before(()=>{
+  before(() => {
     sandbox = sinon.createSandbox();
     handler = new TestStreamHandler('testStream', new KinesisService());
-  })
+  });
 
   beforeEach(() => {
     // Reset the mock before each test
-    subscribeStub = sandbox.stub(KinesisService.prototype,'subscribe').resolves();
+    subscribeStub = sandbox.stub(KinesisService.prototype, 'subscribe').resolves();
   });
 
   afterEach(() => {
@@ -32,7 +32,7 @@ describe('StreamHandler', () => {
     });
 
     it('should log error if subscription fails', async () => {
-        subscribeStub.rejects(new Error('Failed to subscribe'));
+      subscribeStub.rejects(new Error('Failed to subscribe'));
       const loggerErrorStub = sandbox.stub(logger, 'error');
 
       await handler.subscribe();
@@ -43,11 +43,6 @@ describe('StreamHandler', () => {
   });
 
   describe('subscribeToStream', () => {
-    // Define a schema for testing
-    const schema = Joi.object({
-      value: Joi.string().required(),
-    });
-
     it('should handle stream message and log success', async () => {
       const testData = { value: 'testValue' };
 
@@ -58,7 +53,7 @@ describe('StreamHandler', () => {
 
       await handler['subscribeToStream'](testData);
 
-    //   expect(handler.handleStream.calledOnceWith(testData)).to.be.true;
+      //   expect(handler.handleStream.calledOnceWith(testData)).to.be.true;
       expect(loggerInfoStub.calledOnce).to.be.true;
       expect(loggerInfoStub.firstCall.args[0]).to.equal('Message handled');
     });
@@ -66,7 +61,7 @@ describe('StreamHandler', () => {
     it('should log error if validation fails', async () => {
       const testData = { value: 'testValue' };
       const error = new Error('Validation failed');
-      
+
       // Stub the validate method to throw an error for testing
       sandbox.stub(handler as any, 'validate').throws(error);
 
@@ -87,7 +82,7 @@ class TestStreamHandler extends StreamHandler<{ value: string }> {
     value: Joi.string().required(),
   });
 
-  public handleStream(data: { value: string }): Promise<void> {
+  public handleStream(): Promise<void> {
     return Promise.resolve();
   }
 }

@@ -7,19 +7,23 @@ import { IKinesisService, KinesisService } from '../../services/external/Kinesis
 describe('KinesisService', () => {
   let kinesisService: IKinesisService;
   let putRecordStub: sinon.SinonStub;
-  let getShardIteratorStub: sinon.SinonStub;
-  let getRecordsStub: sinon.SinonStub;
+  // let getShardIteratorStub: sinon.SinonStub;
+  // let getRecordsStub: sinon.SinonStub;
   let sandbox: sinon.SinonSandbox;
 
-  before(()=>{
+  before(() => {
     sandbox = sinon.createSandbox();
-  })
+  });
 
   beforeEach(() => {
     // Stubbing Kinesis client methods
-    putRecordStub = sandbox.stub(Kinesis.prototype,'putRecord').resolves();
-    getShardIteratorStub = sandbox.stub(Kinesis.prototype,'getShardIterator').callsArgWith(1, null, { ShardIterator: 'dummyShardIterator' });
-    getRecordsStub = sandbox.stub(Kinesis.prototype,'getRecords').callsArgWith(1, null, { Records: [], NextShardIterator: 'dummyNextShardIterator' });
+    putRecordStub = sandbox.stub(Kinesis.prototype, 'putRecord').resolves();
+    // getShardIteratorStub = sandbox
+    //   .stub(Kinesis.prototype, 'getShardIterator')
+    //   .callsArgWith(1, null, { ShardIterator: 'dummyShardIterator' });
+    // getRecordsStub = sandbox
+    //   .stub(Kinesis.prototype, 'getRecords')
+    //   .callsArgWith(1, null, { Records: [], NextShardIterator: 'dummyNextShardIterator' });
 
     kinesisService = new KinesisService();
   });
@@ -35,8 +39,11 @@ describe('KinesisService', () => {
       expect(putRecordStub.calledOnce).to.be.true;
       expect(putRecordStub.firstCall.args[0]).to.deep.equal({
         StreamName: 'testStream',
-        Data: Uint8Array.from([123, 34, 109, 101, 115, 115, 97, 103, 101, 34, 58, 34, 84, 101, 115, 116, 32, 109, 101, 115, 115, 97, 103, 101, 34, 125]),
-        PartitionKey: '1'
+        Data: Uint8Array.from([
+          123, 34, 109, 101, 115, 115, 97, 103, 101, 34, 58, 34, 84, 101, 115, 116, 32, 109, 101, 115, 115, 97, 103,
+          101, 34, 125,
+        ]),
+        PartitionKey: '1',
       });
     });
 
