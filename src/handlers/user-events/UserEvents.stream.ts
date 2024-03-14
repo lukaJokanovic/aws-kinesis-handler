@@ -41,11 +41,11 @@ export class UserEventsHandler extends StreamHandler<IUserEventsMessage> {
 
   private async handleUserLimitReset(data: IResetUserLimit): Promise<void> {
     this.validate(data, userLimitResetPayloadSchema);
-    await this._userLimitRepository.reset(data.userLimitId,data.resetAmount,data.nextResetTime);
+    await this._userLimitRepository.reset(data.userLimitId, data.resetAmount, data.nextResetTime);
   }
 
   private async handleUserLimitProgressChanged(data: IChangeProgressUserLimit): Promise<void> {
     this.validate(data, userLimitProgressChangedSchema);
-    await this._userLimitRepository.update(data.userLimitId,data.amount);
+    await this._userLimitRepository.update(data.userLimitId, data.amount);
   }
 }

@@ -1,4 +1,4 @@
-import Joi, { ValidationResult } from 'joi';
+import Joi from 'joi';
 import { IKinesisService } from '../services/external/Kinesis.service';
 import logger from '../services/external/Logger.service';
 

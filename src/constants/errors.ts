@@ -1,8 +1,8 @@
-export class ErrorReport extends Error{
-    constructor(message: string, public details?: any) {
-		super(message);
-		this.name = this.constructor.name;
-	}
+export class ErrorReport extends Error {
+  constructor(message: string, public details?: any) {
+    super(message);
+    this.name = this.constructor.name;
+  }
 
   public withDetails(details: any): ErrorReport {
     return new ErrorReport(this.message, details);

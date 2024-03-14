@@ -21,10 +21,10 @@ export class UserLimitInMemoryRepository implements IUserLimitRepository {
 
   public async update(userLimitId: string, amount: string): Promise<IUserLimit> {
     const userLimit = await this.get(userLimitId);
-    assert(userLimit !== undefined, USER_LIMIT_DOES_NOT_EXIST.withDetails({userLimitId}));
+    assert(userLimit !== undefined, USER_LIMIT_DOES_NOT_EXIST.withDetails({ userLimitId }));
 
     const newValue = Number(userLimit.value) - Number(amount ?? 0);
-    assert(newValue < 0, INSUFFICIENT_FUNDS.withDetails({newValue, amount}));
+    assert(newValue < 0, INSUFFICIENT_FUNDS.withDetails({ newValue, amount }));
 
     userLimit.value = newValue.toString();
 
@@ -33,7 +33,7 @@ export class UserLimitInMemoryRepository implements IUserLimitRepository {
 
   public async reset(userLimitId: string, resetAmount: string, nextResetTime: number): Promise<IUserLimit> {
     const userLimit = await this.get(userLimitId);
-    assert(userLimit !== undefined, USER_LIMIT_DOES_NOT_EXIST.withDetails({userLimitId}));
+    assert(userLimit !== undefined, USER_LIMIT_DOES_NOT_EXIST.withDetails({ userLimitId }));
 
     userLimit.value = resetAmount;
     userLimit.nextResetTime = nextResetTime;
