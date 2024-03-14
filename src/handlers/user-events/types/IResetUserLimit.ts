@@ -15,18 +15,7 @@ export interface IResetUserLimit {
 }
 
 export const userLimitResetPayloadSchema = Joi.object({
-  brandId: Joi.string().required(),
-  currencyCode: Joi.string().required(),
-  userId: Joi.string().required(),
   userLimitId: Joi.string().required(),
   nextResetTime: Joi.number().required(),
-  period: Joi.string()
-    .valid(...Object.values(LimitPeriod))
-    .required(),
   resetAmount: Joi.string().required(),
-  unusedAmount: Joi.string().required(),
-  resetPercentage: Joi.string().required(),
-  type: Joi.string()
-    .valid(...Object.values(LimitType))
-    .required(),
 }).unknown(true);

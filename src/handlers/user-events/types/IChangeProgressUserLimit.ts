@@ -12,12 +12,6 @@ export interface IChangeProgressUserLimit {
 }
 
 export const userLimitProgressChangedSchema = Joi.object({
-  brandId: Joi.string().required(),
-  currencyCode: Joi.string().required(),
-  userId: Joi.string().required(),
   userLimitId: Joi.string().required(),
   amount: Joi.string().required(),
-  nextResetTime: Joi.number().required(),
-  previousProgress: Joi.string().required(),
-  remainingAmount: Joi.string().optional(),
 }).unknown(true);

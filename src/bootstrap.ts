@@ -1,6 +1,6 @@
 import { ServiceConfig } from './configs/Service.config';
 import { METHOD_NOT_IMPLEMENTED } from './constants/errors';
-import { UserEventsHandler } from './handlers/user-events/UserEvents.stream';
+import { UserEventsHandler } from './handlers/user-events/UserEvents.handler';
 import { IUserLimitRepository } from './repositories/user-limit/IUserLimit.repository';
 import { UserLimitInMemoryRepository } from './repositories/user-limit/UserLimitInMemory.repository';
 import { KinesisService } from './services/external/Kinesis.service';
