@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-export interface IChangeUserLimit {
+export interface IChangeProgressUserLimit {
   brandId: string;
   currencyCode: string;
   nextResetTime?: number;

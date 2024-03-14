@@ -6,10 +6,7 @@ import { EventType, IUserEventsMessage, userEventsSchema } from './IUserEvents.m
 import { IUserLimit, userLimitCreatedSchema } from './types/IUserLimit';
 import { KinesisConfig } from '../../configs/Kinesis.config';
 import { IResetUserLimit, userLimitResetPayloadSchema } from './types/IResetUserLimit';
-import {
-  IChangeUserLimit as IChangeProgressUserLimit,
-  userLimitProgressChangedSchema,
-} from './types/IChangeProgressUserLimit';
+import { IChangeProgressUserLimit, userLimitProgressChangedSchema } from './types/IChangeProgressUserLimit';
 
 export class UserEventsHandler extends StreamHandler<IUserEventsMessage> {
   public schema: ObjectSchema<any> = userEventsSchema;
