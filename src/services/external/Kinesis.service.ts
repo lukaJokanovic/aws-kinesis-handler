@@ -10,26 +10,26 @@ export class KinesisService{
         this._kinesis = new Kinesis({
             endpoint: KinesisConfig.ENDPOINT,
             logger: logger,
-            region: 'eu-west-2',
+            region: KinesisConfig.REGION,
             credentials: {
-				accessKeyId: 'some_id',
-				secretAccessKey: 'some_key',
+				accessKeyId: KinesisConfig.ACCESS_KEY_ID,
+				secretAccessKey: KinesisConfig.SECRET_ACCESS_KEY,
 			},
+            // https://github.com/aws/aws-sdk-js-v3/issues/3809
 			requestHandler: new NodeHttpHandler() as any
         });
     }
 
-    public async publish(data: any): Promise<void>{
+    public async publish(stream: string, data: any): Promise<void>{
         const params: PutRecordInput = {
-			StreamName: 'user-events',
+			StreamName: stream,
 			Data: new TextEncoder().encode(JSON.stringify(data)),
 			PartitionKey: '1',
 		}
-        await this._kinesis.putRecord(params);
+        try{
+            await this._kinesis.putRecord(params);
+        }catch(error){
+            // Handler error
+        }
     }
 }
-
-
-let k = new KinesisService()
-
-k.publish({ovo:'je test'})
