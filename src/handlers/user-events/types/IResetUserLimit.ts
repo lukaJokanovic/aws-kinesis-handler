@@ -4,7 +4,7 @@ import { LimitPeriod, LimitType } from './types';
 export interface IResetUserLimit {
   brandId: string;
   currencyCode: string;
-  nextResetTime?: number;
+  nextResetTime: number;
   period: LimitPeriod;
   type: LimitType;
   userId: string;

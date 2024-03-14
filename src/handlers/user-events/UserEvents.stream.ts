@@ -1,18 +1,23 @@
 import { ObjectSchema } from 'joi';
 import { IKinesisService } from '../../services/external/Kinesis.service';
-import logger from '../../services/external/Logger.service';
 import { StreamHandler } from '../StreamHandler';
 import { EventType, IUserEventsMessage, userEventsSchema } from './IUserEvents.message';
 import { IUserLimit, userLimitCreatedSchema } from './types/IUserLimit';
 import { KinesisConfig } from '../../configs/Kinesis.config';
 import { IResetUserLimit, userLimitResetPayloadSchema } from './types/IResetUserLimit';
 import { IChangeProgressUserLimit, userLimitProgressChangedSchema } from './types/IChangeProgressUserLimit';
+import { IUserLimitRepository } from '../../repositories/user-limit/IUserLimit.repository';
+import { METHOD_NOT_IMPLEMENTED } from '../../constants/errors';
 
 export class UserEventsHandler extends StreamHandler<IUserEventsMessage> {
   public schema: ObjectSchema<any> = userEventsSchema;
-  constructor(_kinesisService: IKinesisService) {
+  private _userLimitRepository: IUserLimitRepository;
+
+  constructor(_kinesisService: IKinesisService, userLimitRepository: IUserLimitRepository) {
     super(KinesisConfig.USER_EVENTS_STREAM, _kinesisService);
+    this._userLimitRepository = userLimitRepository;
   }
+
   public async handleStream(message: IUserEventsMessage): Promise<void> {
     switch (message.type) {
       case EventType.USER_LIMIT_CREATED:
@@ -25,22 +30,22 @@ export class UserEventsHandler extends StreamHandler<IUserEventsMessage> {
         await this.handleUserLimitReset(message.payload);
         return;
       default:
-        throw Error('not implemented');
+        throw METHOD_NOT_IMPLEMENTED;
     }
   }
 
-  private async handleUserLimitCreated(data: IUserLimit): Promise<void> {
-    this.validate(data, userLimitCreatedSchema);
-    logger.info('Hello from handleUserLimitCreated', { data });
+  private async handleUserLimitCreated(userLimit: IUserLimit): Promise<void> {
+    this.validate(userLimit, userLimitCreatedSchema);
+    await this._userLimitRepository.save(userLimit);
   }
 
   private async handleUserLimitReset(data: IResetUserLimit): Promise<void> {
     this.validate(data, userLimitResetPayloadSchema);
-    logger.info('Hello from handleUserLimitReset', { data });
+    await this._userLimitRepository.reset(data.userLimitId,data.resetAmount,data.nextResetTime);
   }
 
   private async handleUserLimitProgressChanged(data: IChangeProgressUserLimit): Promise<void> {
     this.validate(data, userLimitProgressChangedSchema);
-    logger.info('Hello from handleUserLimitProgressChanged', { data });
+    await this._userLimitRepository.update(data.userLimitId,data.amount);
   }
 }
