@@ -1,8 +1,8 @@
-import { UserLimit } from "../../handlers/user-events/types/IUserLimit"
+import { IUserLimit } from "../../handlers/user-events/types/IUserLimit"
 
 export interface IUserLimitRepository {
-	get(key: string): Promise<UserLimit>
-	save(payload: any): Promise<UserLimit>
-	reset(payload: any): Promise<UserLimit>
-	update(payload: any): Promise<UserLimit>
+	get(key: string): Promise<IUserLimit>
+	save(payload: any): Promise<IUserLimit>
+	reset(payload: any): Promise<IUserLimit>
+	update(payload: any): Promise<IUserLimit>
 }

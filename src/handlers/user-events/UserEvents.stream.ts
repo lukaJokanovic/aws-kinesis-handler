@@ -1,18 +1,19 @@
-import Joi, { ObjectSchema } from "joi";
+import { ObjectSchema } from "joi";
 import { IKinesisService } from "../../services/external/Kinesis.service";
 import logger from "../../services/external/Logger.service";
 import { StreamHandler } from "../StreamHandler";
 import { EventType, IUserEventsMessage, userEventsSchema } from "./IUserEvents.message";
-import { userLimitCreatedSchema, UserLimitProgressChangedSchema, UserLimitResetPayloadSchema } from "./types/schemas";
-import { UserLimit } from "./types/IUserLimit";
+import { IUserLimit, userLimitCreatedSchema } from "./types/IUserLimit";
+import { KinesisConfig } from "../../configs/Kinesis.config";
+import { IResetUserLimit, userLimitResetPayloadSchema } from "./types/IResetUserLimit";
+import { IChangeUserLimit as IChangeProgressUserLimit, userLimitProgressChangedSchema } from "./types/IChangeProgressUserLimit";
 
 export class UserEventsHandler extends StreamHandler<IUserEventsMessage>{
     public schema: ObjectSchema<any> = userEventsSchema;
     constructor(_kinesisService: IKinesisService){
-        super('user-events',_kinesisService);
+        super(KinesisConfig.USER_EVENTS_STREAM, _kinesisService);
     }
     public async handleStream(message: IUserEventsMessage): Promise<void> {
-        logger.info('Handle',{message});
         switch(message.type){
             case EventType.USER_LIMIT_CREATED:
                 await this.handleUserLimitCreated(message.payload);
@@ -29,18 +30,18 @@ export class UserEventsHandler extends StreamHandler<IUserEventsMessage>{
     }
 
 
-    private async handleUserLimitCreated(data: UserLimit): Promise<void>{
+    private async handleUserLimitCreated(data: IUserLimit): Promise<void>{
         this.validate(data, userLimitCreatedSchema);
         logger.info('Hello from handleUserLimitCreated',{data})
     }
 
-    private async handleUserLimitReset(data: any): Promise<void>{
-        this.validate(data, UserLimitResetPayloadSchema);
+    private async handleUserLimitReset(data: IResetUserLimit): Promise<void>{
+        this.validate(data, userLimitResetPayloadSchema);
         logger.info('Hello from handleUserLimitReset',{data})
     }
 
-    private async handleUserLimitProgressChanged(data: any): Promise<void>{
-        this.validate(data, UserLimitProgressChangedSchema);
+    private async handleUserLimitProgressChanged(data: IChangeProgressUserLimit): Promise<void>{
+        this.validate(data, userLimitProgressChangedSchema);
         logger.info('Hello from handleUserLimitProgressChanged',{data})
     }
 }

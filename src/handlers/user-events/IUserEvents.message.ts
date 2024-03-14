@@ -1,5 +1,4 @@
 import Joi from "joi";
-
 export interface IUserEventsMessage {
     payload: any;
     type: EventType;

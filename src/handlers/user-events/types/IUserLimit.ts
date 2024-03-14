@@ -1,4 +1,7 @@
-export interface UserLimit {
+import Joi from "joi";
+import { LimitPeriod, LimitStatus, LimitType } from "./types";
+
+export interface IUserLimit {
     activeFrom: number;
     activeUntil?: number;
     brandId: string;
@@ -16,28 +19,19 @@ export interface UserLimit {
 }
 
 
-export enum LimitPeriod {
-    CALENDAR_DAY = 'CALENDAR_DAY',
-    CALENDAR_WEEK = 'CALENDAR_WEEK',
-    CALENDAR_MONTH = 'CALENDAR_MONTH',
-    DAY = 'DAY',
-    INDEFINITE = 'INDEFINITE',
-    INSTANCE = 'INSTANCE',
-    WEEK = 'WEEK',
-    MONTH = 'MONTH',
-  }
-
-  export enum LimitStatus {
-    ACTIVE = 'ACTIVE',
-    CANCELED = 'CANCELED',
-    FUTURE = 'FUTURE',
-    IN_COOLDOWN = 'IN_COOLDOWN',
-  }
-  
-  export enum LimitType {
-    BALANCE = 'BALANCE',
-    BET = 'BET',
-    DEPOSIT = 'DEPOSIT',
-    LOSS = 'LOSS',
-    SESSION = 'SESSION',
-  }
+export const userLimitCreatedSchema = Joi.object({
+  activeFrom: Joi.number().required(),
+activeUntil: Joi.number().optional(),
+  brandId: Joi.string().required(),
+createdAt: Joi.number().optional(),
+currencyCode: Joi.string().required(),
+nextResetTime: Joi.number().optional(),
+period: Joi.string().valid(...Object.values(LimitPeriod)).required(),
+previousLimitValue: Joi.string().optional(),
+progress: Joi.string().optional(),
+status: Joi.string().valid(...Object.values(LimitStatus)).required(),
+type: Joi.string().valid(...Object.values(LimitType)).required(),
+userId: Joi.string().required(),
+userLimitId: Joi.string().required(),
+  value: Joi.string().required(),
+}).unknown(true);

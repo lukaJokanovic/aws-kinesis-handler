@@ -5,4 +5,6 @@ export class KinesisConfig {
   public static readonly REGION = process.env.KINESIS_REGION || 'eu-west-2';
   public static readonly ACCESS_KEY_ID = process.env.KINESIS_ACCESS_KEY_ID || 'some_id';
   public static readonly SECRET_ACCESS_KEY = process.env.KINESIS_SECRET_ACCESS_KEY || 'some_key';
+
+  public static readonly USER_EVENTS_STREAM = process.env.USER_EVENTS_STREAM || 'user-events';
 }
