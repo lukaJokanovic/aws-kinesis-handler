@@ -4,8 +4,6 @@ This is a simple stream handler that listens for records added to stream.
 
 - [Prerequisites](#prerequisites)
 - [Commands](#commands)
-- [Usage](#usage)
-- [Decision making](#decision-making)
 - [Answers](#answers)
 
 ## Prerequisites
