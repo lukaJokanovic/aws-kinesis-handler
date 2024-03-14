@@ -19,8 +19,7 @@ services:
       - kinesalite
     extra_hosts:
      - "host.docker.internal:host-gateway"
-    command: >
-      sh -c "node ./build/services/external/Kinesis.service.js"
+    command: ['yarn','run','start:dev']
     environment:
       - KINESIS_HOST=http://host.docker.internal
       - KINESIS_PORT=4567

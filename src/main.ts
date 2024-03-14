@@ -1,3 +1,4 @@
+import { KinesisService } from "./services/external/Kinesis.service";
 import logger from "./services/external/Logger.service";
 
 process
@@ -9,7 +10,15 @@ process
   process.exit(1);
 });
 
-logger.debug('test debug');
-logger.info('hello info');
-logger.error('test error');
-logger.warn('test warn');
+let k = new KinesisService()
+
+k.subscribe('user-events',async (data)=>{
+  setTimeout(()=>{
+    logger.info('Received',{data})
+  },1000);
+}).then(()=>{
+    k.publish('user-events',{ovo:'je test1'})
+    k.publish('user-events',{ovo:'je test2'})
+    k.publish('user-events',{ovo:'je test3'})
+    k.publish('user-events',{ovo:'je test4'})
+})

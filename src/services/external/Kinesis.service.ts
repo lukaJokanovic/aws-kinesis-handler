@@ -1,4 +1,4 @@
-import { Kinesis, PutRecordInput } from "@aws-sdk/client-kinesis";
+import { Kinesis, PutRecordInput,ShardIteratorType } from "@aws-sdk/client-kinesis";
 import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 import { KinesisConfig } from "../../configs/Kinesis.config";
 import logger from "./Logger.service";
@@ -9,7 +9,6 @@ export class KinesisService{
     constructor(){
         this._kinesis = new Kinesis({
             endpoint: KinesisConfig.ENDPOINT,
-            logger: logger,
             region: KinesisConfig.REGION,
             credentials: {
 				accessKeyId: KinesisConfig.ACCESS_KEY_ID,
@@ -28,8 +27,50 @@ export class KinesisService{
 		}
         try{
             await this._kinesis.putRecord(params);
+            logger.info('Record published',{params});
         }catch(error){
-            // Handler error
+            logger.info('Failed to publish record',{params});
         }
     }
+
+    public async subscribe(streamName:string, cb: (data: any) => Promise<void>): Promise<void>{
+        const iteratorParams = {
+        ShardId: 'shardId-000000000000',
+        ShardIteratorType: ShardIteratorType.LATEST, // Start from the latest record in the stream
+        StreamName: streamName
+      };
+
+      this._kinesis.getShardIterator(iteratorParams, (err: any, data: any) => {
+        if (err) {
+          logger.error('Error getting shard iterator:', err);
+          return;
+        }
+      
+        const shardIterator = data.ShardIterator;
+      
+        // Continuously get records from the shard
+        const getRecordsParams = {
+          ShardIterator: shardIterator
+        };
+      
+        setInterval(() => {
+          this._kinesis.getRecords(getRecordsParams, async (err:any, data:any) => {
+            if (err) {
+                logger.error('Error getting records:', err);
+              return;
+            }
+      
+            // Process received records
+            for(const record of data.Records){
+                const data = JSON.parse(Buffer.from(record.Data, 'base64').toString('utf-8'));
+                await cb(data);
+            }
+      
+            // Update shard iterator for next request
+            getRecordsParams.ShardIterator = data.NextShardIterator;
+          });
+        }, 1000); // Adjust the interval as per requirement
+      });
+        
+    }    
 }
