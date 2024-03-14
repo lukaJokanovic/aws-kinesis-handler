@@ -32,23 +32,22 @@ export class KinesisService implements IKinesisService {
     };
     try {
       await this._kinesis.putRecord(params);
-      logger.info('Record published', { params, data });
+      logger.info('Record published', { data, stream });
     } catch (error) {
-      logger.info('Failed to publish record', { params, data });
+      logger.info('Failed to publish record', { data, stream });
     }
   }
 
   public async subscribe(streamName: string, cb: (data: any) => Promise<void>): Promise<void> {
     const iteratorParams = {
-      ShardId: 'shardId-000000000000',
+      ShardId: 'shardId-000000000000', // first shard
       ShardIteratorType: ShardIteratorType.LATEST, // Start from the latest record in the stream
       StreamName: streamName,
     };
 
-    this._kinesis.getShardIterator(iteratorParams, (err: any, data: any) => {
-      if (err) {
-        logger.error('Error getting shard iterator:', err);
-        return;
+    this._kinesis.getShardIterator(iteratorParams, (error: any, data: any) => {
+      if (error) {
+        throw error;
       }
 
       const shardIterator = data.ShardIterator;
@@ -59,10 +58,9 @@ export class KinesisService implements IKinesisService {
       };
 
       setInterval(() => {
-        this._kinesis.getRecords(getRecordsParams, async (err: any, data: any) => {
-          if (err) {
-            logger.error('Error getting records:', err);
-            return;
+        this._kinesis.getRecords(getRecordsParams, async (error: any, data: any) => {
+          if (error) {
+            throw error;
           }
 
           // Process received records

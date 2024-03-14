@@ -21,8 +21,11 @@ services:
      - "host.docker.internal:host-gateway"
     command: ['yarn','run','start:dev']
     environment:
+      # KINESIS ENV 
       - KINESIS_HOST=http://host.docker.internal
       - KINESIS_PORT=4567
       - KINESIS_REGION=eu-west-2
       - KINESIS_ACCESS_KEY_ID=some_id
       - KINESIS_SECRET_ACCESS_KEY=some_key
+      # DB ENV
+      - DB_IN_MEMORY=True
