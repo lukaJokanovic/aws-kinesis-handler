@@ -1,4 +1,4 @@
-import { Environment } from "../enums/Environment";
+import { Environment } from '../enums/Environment';
 
 export class ServiceConfig {
   public static readonly NODE_ENV = process.env.NODE_ENV || Environment.Local;

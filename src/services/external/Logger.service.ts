@@ -16,19 +16,19 @@ export class LoggerService implements ILoggerService {
   }
 
   public debug(message: string, meta?: Record<string, unknown>): void {
-    this._logger.debug(message, {meta});
+    this._logger.debug(message, { meta });
   }
 
   public info(message: string, meta?: Record<string, unknown>): void {
-    this._logger.info(message, {meta});
+    this._logger.info(message, { meta });
   }
 
   public warn(message: string, meta?: Record<string, unknown>): void {
-    this._logger.warn(message, {meta});
+    this._logger.warn(message, { meta });
   }
 
   public error(message: string, meta?: Record<string, unknown>): void {
-    this._logger.error(message, {meta});
+    this._logger.error(message, { meta });
   }
 }
 
