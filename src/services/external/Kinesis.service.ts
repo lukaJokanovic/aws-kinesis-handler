@@ -67,7 +67,7 @@ export class KinesisService implements IKinesisService{
       
             // Process received records
             for(const record of data.Records){
-                const message = Buffer.from(record.Data, 'base64').toString('utf-8');
+                const message = JSON.parse(Buffer.from(record.Data, 'base64').toString('utf-8'));
                 await cb(message);
             }
       

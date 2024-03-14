@@ -1,4 +1,4 @@
-import { UserLimit } from "../../dtos/UserLimit.dto"
+import { UserLimit } from "../../handlers/user-events/types/IUserLimit"
 
 export interface IUserLimitRepository {
 	get(key: string): Promise<UserLimit>

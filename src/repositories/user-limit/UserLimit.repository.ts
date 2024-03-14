@@ -1,4 +1,4 @@
-import { UserLimit } from "../../dtos/UserLimit.dto";
+import { UserLimit } from "../../handlers/user-events/types/IUserLimit";
 import { IUserLimitRepository } from "./IUserLimit.repository";
 
 export class UserLimitRepository implements IUserLimitRepository{

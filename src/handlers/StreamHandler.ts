@@ -14,14 +14,10 @@ export abstract class StreamHandler<T> {
     }
   }
 
-  private async subscribeToStream(message: string): Promise<void> {
+  private async subscribeToStream(message: object): Promise<void> {
     try {
-      const { value, error } = this.validateMessage(message);
-      if (error) {
-        logger.error('Joi Validation failed', {error});
-        return;
-      }
-
+      const value = this.validate(message, this.schema);
+ 
         const start = Date.now();
         await this.handleStream(value);
         const duration = Date.now() - start;
@@ -33,10 +29,13 @@ export abstract class StreamHandler<T> {
   }
 
 
-  private validateMessage(message: string): ValidationResult {
-    const parsedMessage = JSON.parse(message);
-
-    return this.schema.validate(parsedMessage);
+  protected validate(data: object, schema: Joi.ObjectSchema): any{
+    const { value, error } = schema.validate(data);
+    if (error) {
+      throw error;
+    }
+    
+    return value;
   }
 
   public abstract handleStream(message: T): Promise<void>;
