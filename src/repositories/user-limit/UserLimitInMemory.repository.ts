@@ -24,7 +24,7 @@ export class UserLimitInMemoryRepository implements IUserLimitRepository {
     assert(userLimit !== undefined, USER_LIMIT_DOES_NOT_EXIST.withDetails({ userLimitId }));
 
     const newValue = Number(userLimit.value) - Number(amount ?? 0);
-    assert(newValue < 0, INSUFFICIENT_FUNDS.withDetails({ newValue, amount }));
+    assert(newValue >= 0, INSUFFICIENT_FUNDS.withDetails({ userLimitId, newValue, amount }));
 
     userLimit.progress = newValue.toString();
 

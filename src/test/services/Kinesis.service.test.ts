@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { Kinesis, ShardIteratorType } from '@aws-sdk/client-kinesis';
-import logger from '../services/external/Logger.service';
-import { IKinesisService, KinesisService } from '../services/external/Kinesis.service';
+import { Kinesis } from '@aws-sdk/client-kinesis';
+import logger from '../../services/external/Logger.service';
+import { IKinesisService, KinesisService } from '../../services/external/Kinesis.service';
 
 describe('KinesisService', () => {
   let kinesisService: IKinesisService;
