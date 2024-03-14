@@ -18,16 +18,16 @@ export class UserEventsHandler extends StreamHandler<IUserEventsMessage> {
     this._userLimitRepository = userLimitRepository;
   }
 
-  public async handleStream(message: IUserEventsMessage): Promise<void> {
-    switch (message.type) {
+  public async handleStream(data: IUserEventsMessage): Promise<void> {
+    switch (data.type) {
       case EventType.USER_LIMIT_CREATED:
-        await this.handleUserLimitCreated(message.payload);
+        await this.handleUserLimitCreated(data.payload);
         return;
       case EventType.USER_LIMIT_PROGRESS_CHANGED:
-        await this.handleUserLimitProgressChanged(message.payload);
+        await this.handleUserLimitProgressChanged(data.payload);
         return;
       case EventType.USER_LIMIT_RESET:
-        await this.handleUserLimitReset(message.payload);
+        await this.handleUserLimitReset(data.payload);
         return;
       default:
         throw METHOD_NOT_IMPLEMENTED;

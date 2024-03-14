@@ -10,6 +10,7 @@
     "start:dev": "node --inspect=0.0.0.0:9999 ./build/main.js",
     "start:nodemon": "npx nodemon -e ts --exec 'yarn run build && yarn run start:dev'",
     "format": "prettier --write \"src/**/*.ts\"",
+    "populate": "node ./build/scripts/InsertData.script.js",
     "lint:check": "eslint -c .eslintrc.js \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "eslint -c .eslintrc.js \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "mocha 'src/test/**/*.test.ts'",

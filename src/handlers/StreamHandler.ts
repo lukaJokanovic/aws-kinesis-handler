@@ -23,19 +23,19 @@ export abstract class StreamHandler<T> {
     return value;
   }
 
-  private async subscribeToStream(message: object): Promise<void> {
+  private async subscribeToStream(data: object): Promise<void> {
     try {
-      const value = this.validate(message, this.schema);
+      const value = this.validate(data, this.schema);
 
       const start = Date.now();
       await this.handleStream(value);
       const duration = Date.now() - start;
 
-      logger.info('Message handled', { duration });
+      logger.info('Message handled', { duration, data });
     } catch (error) {
-      logger.error('failed to handle message', { error });
+      logger.error('failed to handle message', { error, data });
     }
   }
 
-  public abstract handleStream(message: T): Promise<void>;
+  public abstract handleStream(data: T): Promise<void>;
 }
