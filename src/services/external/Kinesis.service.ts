@@ -3,7 +3,12 @@ import { NodeHttpHandler } from "@aws-sdk/node-http-handler";
 import { KinesisConfig } from "../../configs/Kinesis.config";
 import logger from "./Logger.service";
 
-export class KinesisService{
+export interface IKinesisService {
+    publish(stream: string, data: any): Promise<void>;
+    subscribe(streamName:string, cb: (data: any) => Promise<void>): Promise<void>;
+  }
+
+export class KinesisService implements IKinesisService{
     private _kinesis: Kinesis;
 
     constructor(){
@@ -27,9 +32,9 @@ export class KinesisService{
 		}
         try{
             await this._kinesis.putRecord(params);
-            logger.info('Record published',{params});
+            logger.info('Record published',{params, data});
         }catch(error){
-            logger.info('Failed to publish record',{params});
+            logger.info('Failed to publish record',{params,data});
         }
     }
 
@@ -62,8 +67,8 @@ export class KinesisService{
       
             // Process received records
             for(const record of data.Records){
-                const data = JSON.parse(Buffer.from(record.Data, 'base64').toString('utf-8'));
-                await cb(data);
+                const message = Buffer.from(record.Data, 'base64').toString('utf-8');
+                await cb(message);
             }
       
             // Update shard iterator for next request

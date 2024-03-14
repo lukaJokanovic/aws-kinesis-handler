@@ -1,3 +1,4 @@
+import { UserEventsHandler } from "./handlers/user-events/UserEvents.stream";
 import { KinesisService } from "./services/external/Kinesis.service";
 import logger from "./services/external/Logger.service";
 
@@ -10,15 +11,13 @@ process
   process.exit(1);
 });
 
-let k = new KinesisService()
+let k = new KinesisService();
 
-k.subscribe('user-events',async (data)=>{
-  setTimeout(()=>{
-    logger.info('Received',{data})
-  },1000);
-}).then(()=>{
-    k.publish('user-events',{ovo:'je test1'})
-    k.publish('user-events',{ovo:'je test2'})
-    k.publish('user-events',{ovo:'je test3'})
-    k.publish('user-events',{ovo:'je test4'})
+let s = new UserEventsHandler(k);
+
+s.subscribe().then(()=>{
+    k.publish('user-events',{type:'LIMIT_USER_CREATED',payload:{test:'1'}});
+    k.publish('user-events',{type:'USER_LIMIT_PROGRESS_CHANGED',payload:{test:'2'}});
+    k.publish('user-events',{type:'USER_LIMIT_RESET',payload:{test:'3'}});
+    k.publish('user-events',{type:'FKEKFEKDK',payload:{}});
 })
