@@ -34,7 +34,7 @@ export class KinesisService implements IKinesisService {
       await this._kinesis.putRecord(params);
       logger.info('Record published', { data, stream });
     } catch (error) {
-      logger.info('Failed to publish record', { data, stream });
+      logger.error('Failed to publish record', { data, stream, error });
     }
   }
 
